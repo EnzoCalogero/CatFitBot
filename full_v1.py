@@ -13,6 +13,7 @@ led = LED(18)
 
 while True:
     led.off()
+    print("waiting")
     pir.wait_for_motion()
 
     led.on()
@@ -27,6 +28,7 @@ while True:
     k = random.randint(1,10)
     b1 = random.randint(0,80)-40
     while t2-t < 60:
+        print("Time: t2--> {} t--> {} delta--> {}".format(t2, t, t2-t))
         # Get th
         a2 = random.randint(40,90)*(-1)
 
