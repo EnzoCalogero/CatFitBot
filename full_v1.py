@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 c_handler = logging.StreamHandler()  # handler for routine view
 f_handler = logging.FileHandler('CatFitBot.log')
 c_handler.setLevel(logging.WARNING)
-f_handler.setLevel(logging.ERROR)
+f_handler.setLevel(logging.INFO)
 
 # Create formatters and add it to handlers
 c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
@@ -29,8 +29,8 @@ f_handler.setFormatter(f_format)
 logger.addHandler(c_handler)
 logger.addHandler(f_handler)
 
-logger.warning('This is a warning')
-logger.error('This is an error')
+logger.info('This is a warning')
+logger.error('This is an information')
 
 
 
@@ -38,7 +38,7 @@ pir = MotionSensor(4)
 led1 = LED(18)
 logger.error('starting Application')
 while True:
-    led1.off()
+    #led1.off()
     print("waiting")
     pir.wait_for_motion()
     logger.error('starting Routine')
