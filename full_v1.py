@@ -39,6 +39,38 @@ led3=LED(18)
 led1=LED(24)
 led2=LED(23)
 
+def led_random():
+    k=random.randint(1,7)
+    if k == 1:
+        led1.off()
+        led2.off()
+        led3.on()
+    elif k == 2:
+        led1.off()
+        led2.on()
+        led3.off()
+    elif k == 3:
+        led1.off()
+        led2.on()
+        led3.on()
+    elif k == 4:
+        led1.on()
+        led2.off()
+        led3.off()
+    elif k == 5:
+        led1.on()
+        led2.off()
+        led3.on()
+    elif k == 6:
+        led1.on()
+        led2.on()
+        led3.off()
+    elif k == 7:
+        led1.on()
+        led2.on()
+        led3.on()
+
+
 while True:
     led1.off()
     led2.off()
@@ -48,9 +80,10 @@ while True:
     pir.wait_for_motion()
     logger.log(level=40, msg="Started the post wait")
 
-    led1.on()
-    led2.on()
-    led3.on()
+    #led1.on()
+    #led2.on()
+    #led3.on()
+    led_random()
     print("Led 1 on")
 
     # Reset the time
@@ -84,11 +117,11 @@ while True:
             # Two decimal places is quite enough!
             print(round(b1, 2))
 
-            # Sleep for a bit so we're not hammering the HAT with updates
-            # GPIO.output(ledPin,GPIO.LOW)
+            led_random()
             time.sleep(0.1)
         a1 = a2
         b1 = b2
         k = random.randint(1, 10)
+
         time.sleep(5 / k)
         t2 = time.time()
