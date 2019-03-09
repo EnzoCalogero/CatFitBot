@@ -35,15 +35,22 @@ logger.log(level=40, msg='This is an information')
 
 
 pir = MotionSensor(4)
-led1 = LED(18)
+led3=LED(18)
+led1=LED(24)
+led2=LED(23)
+
 while True:
-    #led1.off()
+    led1.off()
+    led2.off()
+    led3.off()
     print("waiting")
     logger.log(level=40,msg="Waiting to start")
     pir.wait_for_motion()
     logger.log(level=40, msg="Started the post wait")
 
     led1.on()
+    led2.on()
+    led3.on()
     print("Led 1 on")
 
     # Reset the time
