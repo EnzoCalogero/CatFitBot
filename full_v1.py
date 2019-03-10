@@ -40,7 +40,9 @@ led1=LED(24)
 led2=LED(23)
 
 def led_random():
-    k=random.randint(1,7)
+    
+    k=random.randint(1,3)
+    time.sleep(k/20.)
     if k == 1:
         led1.off()
         led2.off()
@@ -50,9 +52,9 @@ def led_random():
         led2.on()
         led3.off()
     elif k == 3:
-        led1.off()
-        led2.on()
-        led3.on()
+        led1.on()
+        led2.off()
+        led3.off()
     elif k == 4:
         led1.on()
         led2.off()
@@ -80,9 +82,6 @@ while True:
     pir.wait_for_motion()
     logger.log(level=40, msg="Started the post wait")
 
-    #led1.on()
-    #led2.on()
-    #led3.on()
     led_random()
     print("Led 1 on")
 
