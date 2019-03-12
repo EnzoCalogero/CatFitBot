@@ -8,12 +8,17 @@ from gpiozero import LED
 from gpiozero import MotionSensor
 import pantilthat
 
+DELAY = 1
+HORIZONTAL_RANGE = 90
+VERTICAL_RANGE = 90
+SWITHCH_ON_LED = 1
+LOG_FILENAME = 'CatFitBot.log'
+
 
 # Create a custom logger
 logger = logging.getLogger(__name__)
-
 handler2 = logging.StreamHandler()  # handler for routine view
-handler1 = logging.FileHandler('CatFitBot.log')
+handler1 = logging.FileHandler(LOG_FILENAME)
 
 # Create handlers
 format1 = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
@@ -29,20 +34,30 @@ logger.addHandler(handler2)
 logger.info('This is an error')
 logger.log(level=40, msg='This is an error4')
 
-logger.log(level=40,msg="The Application is starting")
+logger.log(level=40, msg="The Application is starting")
 logger.log(level=40, msg='This is an information')
 
-
-
 pir = MotionSensor(4)
-led3=LED(18)
-led1=LED(24)
-led2=LED(23)
+led3 = LED(18)
+led1 = LED(24)
+led2 = LED(23)
 
-def led_random():
-    
-    k=random.randint(1,3)
-    time.sleep(k/20.)
+
+def led_random(number=1):
+    '''
+
+    :param number: maximum number of led(s) simultaneously switch on.
+    :return: none
+    '''
+    if number == 1:
+        uplimit = 3
+    elif number == 2:
+        uplimit = 6
+    else:
+        uplimit = 7
+
+    k = random.randint(1, uplimit)
+    time.sleep(DELAY * k / 20.)
     if k == 1:
         led1.off()
         led2.off()
@@ -57,16 +72,16 @@ def led_random():
         led3.off()
     elif k == 4:
         led1.on()
-        led2.off()
+        led2.on()
         led3.off()
     elif k == 5:
         led1.on()
         led2.off()
         led3.on()
     elif k == 6:
-        led1.on()
+        led1.off()
         led2.on()
-        led3.off()
+        led3.on()
     elif k == 7:
         led1.on()
         led2.on()
@@ -77,12 +92,12 @@ while True:
     led1.off()
     led2.off()
     led3.off()
-    print("waiting")
-    logger.log(level=40,msg="Waiting to start")
+    print("Waiting")
+    logger.log(level=40, msg="Waiting to start")
     pir.wait_for_motion()
     logger.log(level=40, msg="Started the post wait")
 
-    led_random()
+    led_random(number=SWITHCH_ON_LED)
     print("Led 1 on")
 
     # Reset the time
@@ -116,11 +131,11 @@ while True:
             # Two decimal places is quite enough!
             print(round(b1, 2))
 
-            led_random()
-            time.sleep(0.1)
+            led_random(number=SWITHCH_ON_LED)
+            time.sleep(DELAY * 0.1)
         a1 = a2
         b1 = b2
         k = random.randint(1, 10)
 
-        time.sleep(5 / k)
+        time.sleep(DELAY * 5 / k)
         t2 = time.time()
