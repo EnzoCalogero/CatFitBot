@@ -10,5 +10,3 @@ led3.on()
 print("Leds on")
 
 time.sleep(200)
-print("LED off")
-#led.off()

@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 
-import time
-import random
 import logging
+import random
+import time
 
+import pantilthat
 from gpiozero import LED
 from gpiozero import MotionSensor
-import pantilthat
 
 DELAY = 1
 HORIZONTAL_RANGE = 90
 VERTICAL_RANGE = 90
-SWITHCH_ON_LED = 1
-LOG_FILENAME = 'CatFitBot.log'
-
+SWITHCH_ON_LED = 0
+LOG_FILENAME = 'logs/CatFitBot.log'
 
 # Create a custom logger
 logger = logging.getLogger(__name__)
@@ -44,12 +43,14 @@ led2 = LED(23)
 
 
 def led_random(number=1):
-    '''
-
+    """
     :param number: maximum number of led(s) simultaneously switch on.
+    in case of zero only one ld is used.
     :return: none
-    '''
-    if number == 1:
+    """
+    if number == 0:
+        uplimit = 1
+    elif number == 1:
         uplimit = 3
     elif number == 2:
         uplimit = 6
@@ -114,7 +115,7 @@ while True:
         # Get th
         a2 = random.randint(40, 90) * (-1)
 
-        k = random.randint(1, 10)
+        #k = random.randint(1, 10)
         b2 = random.randint(0, 80) - 40
         print("{}  {}".format(a1, b1))
         print("{}  {}".format(a2, b2))
