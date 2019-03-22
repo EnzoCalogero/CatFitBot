@@ -7,8 +7,10 @@ import time
 import pantilthat
 from gpiozero import LED
 from gpiozero import MotionSensor
+from gpiozero import Button
 
 DELAY = 1
+TIME_ACTIVITY = 60  # is in seconds
 HORIZONTAL_RANGE = 90
 VERTICAL_RANGE = 90
 SWITHCH_ON_LED = 0
@@ -30,16 +32,29 @@ handler2.setFormatter(format2)
 logger.addHandler(handler1)
 logger.addHandler(handler2)
 
-logger.info('This is an error')
-logger.log(level=40, msg='This is an error4')
-
 logger.log(level=40, msg="The Application is starting")
-logger.log(level=40, msg='This is an information')
 
+# Hardware settings
 pir = MotionSensor(4)
+button = Button(22, pull_up=False)  # the tilt_switch sensor
 led3 = LED(18)
 led1 = LED(24)
 led2 = LED(23)
+
+
+def cat_attack():
+    """
+    check the status of the tilt switch, in case it is true,
+    the application assume a cat attack and exit. to stop any moving part and led activity.
+    hoping to be spare by the cat.
+
+    :return: none
+    """
+    if button.is_pressed:
+        logger.log(level=40, msg="No Cat attack has been logged")
+        print("No Cat attack has been logged")
+    else:
+        print("exit()")
 
 
 def led_random(number=1):
@@ -57,33 +72,33 @@ def led_random(number=1):
     else:
         uplimit = 7
 
-    k = random.randint(1, uplimit)
-    time.sleep(DELAY * k / 20.)
-    if k == 1:
+    k_ = random.randint(1, uplimit)
+    time.sleep(DELAY * k_ / 20.)
+    if k_ == 1:
         led1.off()
         led2.off()
         led3.on()
-    elif k == 2:
+    elif k_ == 2:
         led1.off()
         led2.on()
         led3.off()
-    elif k == 3:
+    elif k_ == 3:
         led1.on()
         led2.off()
         led3.off()
-    elif k == 4:
+    elif k_ == 4:
         led1.on()
         led2.on()
         led3.off()
-    elif k == 5:
+    elif k_ == 5:
         led1.on()
         led2.off()
         led3.on()
-    elif k == 6:
+    elif k_ == 6:
         led1.off()
         led2.on()
         led3.on()
-    elif k == 7:
+    elif k_ == 7:
         led1.on()
         led2.on()
         led3.on()
@@ -107,15 +122,13 @@ while True:
 
     a1 = random.randint(40, 90) * (-1)
 
-    k = random.randint(1, 10)
+    #  k = random.randint(1, 10)
     b1 = random.randint(0, 80) - 40
-    while t2 - t < 60:
+    while t2 - t < TIME_ACTIVITY:
         logger.info('routi for 1 minute')
         print("Time: t2--> {} t--> {} delta--> {}".format(t2, t, t2 - t))
         # Get th
         a2 = random.randint(40, 90) * (-1)
-
-        #k = random.randint(1, 10)
         b2 = random.randint(0, 80) - 40
         print("{}  {}".format(a1, b1))
         print("{}  {}".format(a2, b2))
@@ -125,6 +138,7 @@ while True:
 
         # micro movement
         for i in range(10):
+            cat_attack()  # check for the cat activity....
             print("init {} finale{} step {} posizione {} delta {}".format(a1, a2, i, int(a1 - i * a_step), a_step))
             pantilthat.pan(int(b1 - i * b_step))
             pantilthat.tilt(int(a1 - i * a_step))

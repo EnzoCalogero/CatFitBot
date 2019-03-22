@@ -10,3 +10,4 @@ while True:
         print("verticale!")
     else:
          print("exit")
+
