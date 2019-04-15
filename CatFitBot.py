@@ -10,10 +10,14 @@ from gpiozero import MotionSensor
 from gpiozero import Button
 
 DELAY = 1
-TIME_ACTIVITY = 60  # is in seconds
+TIME_ACTIVITY = 60  # Time that the device i soperationg before check if teh cat is still detect. (in seconds)
+
 HORIZONTAL_RANGE = 90
 VERTICAL_RANGE = 90
+
 SWITHCH_ON_LED = 0
+
+# file where to log the events
 LOG_FILENAME = 'logs/CatFitBot.log'
 
 # Create a custom logger
@@ -27,7 +31,7 @@ format2 = logging.Formatter('%(name)s - %(message)s')
 handler1.setFormatter(format1)
 handler2.setFormatter(format2)
 
-# Create formatters and add it to handlers
+# Create formatter and add it to handlers
 
 logger.addHandler(handler1)
 logger.addHandler(handler2)
@@ -44,7 +48,7 @@ led2 = LED(23)
 
 def cat_attack():
     """
-    check the status of the tilt switch, in case it is true,
+    Check the status of the tilt switch, in case it is true,
     the application assume a cat attack and exit. to stop any moving part and led activity.
     hoping to be spare by the cat.
 
@@ -59,8 +63,12 @@ def cat_attack():
 
 def led_random(number=1):
     """
+    Define the number of led(s) operating simultaneously
+
     :param number: maximum number of led(s) simultaneously switch on.
-    in case of zero only one ld is used.
+
+   in case of zero only one ld is used.
+
     :return: none
     """
     if number == 0:
@@ -120,18 +128,19 @@ while True:
     t = time.time()
     t2 = time.time()
 
-    a1 = random.randint(40, 90) * (-1)
+    a1 = random.randint(HORIZONTAL_RANGE/2, HORIZONTAL_RANGE) * (-1)
+    b1 = random.randint(0, VERTICAL_RANGE) - VERTICAL_RANGE/2
 
-    #  k = random.randint(1, 10)
-    b1 = random.randint(0, 80) - 40
     while t2 - t < TIME_ACTIVITY:
-        logger.info('routi for 1 minute')
-        print("Time: t2--> {} t--> {} delta--> {}".format(t2, t, t2 - t))
-        # Get th
-        a2 = random.randint(40, 90) * (-1)
-        b2 = random.randint(0, 80) - 40
-        print("{}  {}".format(a1, b1))
-        print("{}  {}".format(a2, b2))
+        # Only for debugging purpose
+        #logger.info('routi for 1 minute')
+
+        # #print("Time: t2--> {} t--> {} delta--> {}".format(t2, t, t2 - t))
+
+        a2 = random.randint(HORIZONTAL_RANGE/2, HORIZONTAL_RANGE) * (-1)
+        b2 = random.randint(0, VERTICAL_RANGE) - VERTICAL_RANGE/2
+        #print("{}  {}".format(a1, b1))
+        #print("{}  {}".format(a2, b2))
 
         a_step = (a1 - a2) / 10
         b_step = (b1 - b2) / 10
@@ -139,12 +148,13 @@ while True:
         # micro movement
         for i in range(10):
             cat_attack()  # check for the cat activity....
-            print("init {} finale{} step {} posizione {} delta {}".format(a1, a2, i, int(a1 - i * a_step), a_step))
+            #print("init {} finale{} step {} posizione {} delta {}".format(a1, a2, i, int(a1 - i * a_step), a_step))
+
             pantilthat.pan(int(b1 - i * b_step))
             pantilthat.tilt(int(a1 - i * a_step))
 
             # Two decimal places is quite enough!
-            print(round(b1, 2))
+            #print(round(b1, 2))
 
             led_random(number=SWITHCH_ON_LED)
             time.sleep(DELAY * 0.1)
